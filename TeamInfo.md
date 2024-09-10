@@ -8,8 +8,8 @@
 | TeamName    |         411impact      |
 | Captain     |     Nuoxing Shang      |
 | Captain     |  nuoxing2@illinois.edu |
-| Member1     |                        |
-| Member1     |                        |
+| Member1     |     Hewei Tang         |
+| Member1     |  heweit2@illinois.edu  |
 | Member2     |                        |
 | Member2     |                        |
 | Member3     |                        |
