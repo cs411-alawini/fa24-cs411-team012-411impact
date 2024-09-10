@@ -8,10 +8,10 @@
 | TeamName    |         411impact      |
 | Captain     |     Nuoxing Shang      |
 | Captain     |  nuoxing2@illinois.edu |
-| Member1     |                        |
-| Member1     |                        |
-| Member2     |                        |
-| Member2     |                        |
+| Member1     |         Bo Zhu         |
+| Member1     |   bozhu2@illinois.edu  |
+| Member2     |         Wen Jun        |
+| Member2     |  junwen2@illinois.edu  |
 | Member3     |                        |
 | Member3     |                        |
 
