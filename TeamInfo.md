@@ -10,10 +10,10 @@
 | Captain     |  nuoxing2@illinois.edu |
 | Member1     |     Hewei Tang         |
 | Member1     |  heweit2@illinois.edu  |
-| Member2     |                        |
-| Member2     |                        |
-| Member3     |                        |
-| Member3     |                        |
+| Member2     |        Bo Zhu          |
+| Member2     |  bozhu2@illinois.edu   |
+| Member3     |         Jun Wen        |
+| Member3     |  junwen2@illinois.edu  |
 
 ## Project Information
 
