@@ -41,8 +41,14 @@
 
 **UI Mockup:**
 
-- Coming up soon.
+![Sample Image](UI_mockup.png)
 
 **Project Work Distribution:**
 
-- Coming up soon.
+- Jun Wen: Profile CRUD and key word search; Stored procedures, transactions, constraints, and triggers; Frontend & backend interface.
+
+- Bo Zhu: Stored procedures, transactions, constraints, and triggers; Route optimization algorithm; Live Tracking system.
+
+- Hewei Tang: Route optimization algorithm; Live Tracking system; integrating APIs.
+
+- Nuoxing Shang: Route optimization algorithm; integrating APIs; Frontend & backend interface; GCP hosting.
