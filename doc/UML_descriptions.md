@@ -35,3 +35,9 @@ Cardinality: The assumption here is that each travel movement is unique to one s
 ## BCNF Explanation
 
 ## Relational Schema Code
+#### User(UID: INT [PK], Name: VARCHAR(255), Phone: VARCHAR(20), Email: VARCHAR(255), Address: VARCHAR(255))
+#### Driver(empID: INT [PK], VIN: INT [FK to Vehicle.VIN], Pricing: Decimal(10,2), Ratings: Decimal(3,2), Phone: VARCHAR(20), Email: VARCHAR(255), Address: VARCHAR(255), Experience: INT)
+#### Ride(OrderID: INT [PK], UID: INT [FK to User.UID], empID: INT [FK to Driver.empID], Price: Decimal(10,2), Date: DATE, PickupLocation: VARCHAR(255), DropoffLocation: VARCHAR(255), Rating: Decimal(3,2))
+#### Vehicle(VIN: INT [PK], VehicleTypeID: INT [FK to VehicleType.ProductID], ManufacturingDate: DATE)
+#### VehicleType(ProductID: INT [PK], Name: VARCHAR(255), Size: VARCHAR(50), ReleaseDate: DATE, BrandName: VARCHAR(255))
+#### Travel_Movement(moveID: INT [PK], PickupLocation: VARCHAR(255), DropoffLocation: VARCHAR(255), Date: DATE, Time: TIME)
