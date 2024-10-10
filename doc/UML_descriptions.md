@@ -34,6 +34,10 @@ Assumptions: Travel Movement tracks the dynamic information related to a ride—
 Cardinality: The assumption here is that each travel movement is unique to one specific Ride and captures the details of that ride alone.
 ## BCNF Explanation
 
+Initially, Vehicle Type was part of the Vehicle entity, but we separated it to fit BCNF. This separation was necessary because including Vehicle Type within Vehicle would lead to transitive dependencies, where non-key attributes like Size or BrandName depend on the Vehicle Type, not directly on the Vehicle’s primary key (VIN). By splitting Vehicle Type into a separate entity, we eliminated these dependencies, thus ensuring the model adheres to BCNF. This separation reduces redundancy and prevents update, insert, and delete anomalies.
+
+After separation, all entities in the model conform to BCNF. Each entity’s attributes are fully dependent on its primary key (e.g., User's UID, Driver's EmpID), and there are no partial or transitive dependencies. Relationships between entities are also properly structured, with no violations of BCNF. For instance, the Ride entity links User and Driver without introducing redundancy, and one-to-one or one-to-many relationships (e.g., Vehicle ↔ Vehicle Type) ensure the system is normalized and free from anomalies.
+
 ## Relational Schema Code
 #### User(UID: INT [PK], Name: VARCHAR(255), Phone: VARCHAR(20), Email: VARCHAR(255), Address: VARCHAR(255))
 #### Driver(empID: INT [PK], VIN: INT [FK to Vehicle.VIN], Pricing: Decimal(10,2), Ratings: Decimal(3,2), Phone: VARCHAR(20), Email: VARCHAR(255), Address: VARCHAR(255), Experience: INT)
