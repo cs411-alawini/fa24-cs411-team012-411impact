@@ -14,7 +14,7 @@ Address VARCHAR(255)
 
 CREATE TABLE VehicleType (
 ProductID INT PRIMARY KEY,
-Name VARCHAR(255),
+Type VARCHAR(255),
 Size VARCHAR(50),
 ReleaseDate DATE,
 BrandName VARCHAR(255)
