@@ -1,0 +1,69 @@
+## DDL for creating the tables
+
+### User table
+
+CREATE TABLE User (
+UID INT PRIMARY KEY,
+Name VARCHAR(255),
+Phone VARCHAR(20),
+Email VARCHAR(255),
+Address VARCHAR(255)
+);
+
+### VehicleType table
+
+CREATE TABLE VehicleType (
+ProductID INT PRIMARY KEY,
+Name VARCHAR(255),
+Size VARCHAR(50),
+ReleaseDate DATE,
+BrandName VARCHAR(255)
+);
+
+### Vehicle table
+
+CREATE TABLE Vehicle (
+VIN INT PRIMARY KEY,
+VehicleTypeID INT,
+ManufacturingDate DATE,
+FOREIGN KEY (VehicleTypeID) REFERENCES VehicleType(ProductID)
+);
+
+### Driver table
+
+CREATE TABLE Driver (
+empID INT PRIMARY KEY,
+VIN INT,
+Pricing DECIMAL(10, 2),
+Ratings DECIMAL(3, 2),
+Phone VARCHAR(20),
+Email VARCHAR(255),
+Address VARCHAR(255),
+Experience INT,
+FOREIGN KEY (VIN) REFERENCES Vehicle(VIN)
+);
+
+### Ride table
+
+CREATE TABLE Ride (
+OrderID INT PRIMARY KEY,
+UID INT,
+empID INT,
+Price DECIMAL(10, 2),
+Date DATE,
+PickupLocation VARCHAR(255),
+DropoffLocation VARCHAR(255),
+Rating DECIMAL(3, 2),
+FOREIGN KEY (UID) REFERENCES User(UID),
+FOREIGN KEY (empID) REFERENCES Driver(empID)
+);
+
+### Travel_Movement table
+
+CREATE TABLE Travel_Movement (
+moveID INT PRIMARY KEY,
+PickupLocation VARCHAR(255),
+DropoffLocation VARCHAR(255),
+Date DATE,
+Time TIME
+);
