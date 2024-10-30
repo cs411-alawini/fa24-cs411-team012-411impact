@@ -67,3 +67,69 @@ DropoffLocation VARCHAR(255),
 Date DATE,
 Time TIME
 );
+### SQL queries
+This query fetches comprehensive profiles of drivers, including their personal information, vehicle details, average ratings, and the total number of rides they've completed. It filters drivers based on vehicle type.
+<img width="1512" alt="image" src="https://github.com/user-attachments/assets/d1aec60c-96ee-4656-8aa8-c0966ea83dc6">
+The origin performance analysis is 
+<img width="1239" alt="image" src="https://github.com/user-attachments/assets/355092fb-e63d-42de-8790-920070d638d4">
+after CREATE INDEX idx_vehicletype_brandname ON VehicleType(BrandName);
+<img width="1227" alt="image" src="https://github.com/user-attachments/assets/f8ee797d-ac46-4df3-a540-18d8393b5520">
+after CREATE INDEX idx_vehicle_vehicletypeid ON Vehicle(VehicleTypeID);
+<img width="1294" alt="image" src="https://github.com/user-attachments/assets/1fd50ec1-40fa-4919-904f-648a24aa7054">
+after CREATE INDEX idx_vehicle_vin ON Vehicle(VIN);
+<img width="1292" alt="image" src="https://github.com/user-attachments/assets/eacebfc7-3ece-4486-bbf9-feaf0e6bd34c">
+The observed reduction in query cost solely after creating the idx_vehicletype_brandname index on VehicleType(BrandName) indicates that filtering on BrandName = 'Toyota' was the primary bottleneck, and indexing this column allowed the database to efficiently locate the relevant VehicleType records without scanning the entire table. The other indexes did not impact the cost likely because the dataset is still relatively small, making sequential scans sufficiently fast for join operations and aggregations. Additionally, the database optimizer may have determined that the overhead of using the additional indexes did not provide a significant advantage given the current data volume. As the dataset grows, these other indexes might become more beneficial, but for now, optimizing the most selective and frequently filtered column yielded the noticeable performance improvement.
+
+
+
+This query recommends drivers to users based on input criteria such as pickup location, dropoff location, goods size, budget, and preferred time. It selects drivers whose vehicle types match the goods size or scores.
+<img width="990" alt="image" src="https://github.com/user-attachments/assets/51284cf5-8e9d-4782-8ffe-fe061cedb463">
+The origin performance analysis is 
+<img width="1240" alt="image" src="https://github.com/user-attachments/assets/0dfd178e-956d-4d9d-9993-82e0018ba4ce">
+after CREATE INDEX idx_vehicletype_size ON VehicleType(Size);
+<img width="1243" alt="image" src="https://github.com/user-attachments/assets/1e86fbba-af6b-44bd-a736-0dbe470aae94">
+after CREATE INDEX idx_vehicletype_size_cover ON VehicleType(Size) INCLUDE (ProductID);
+<img width="1243" alt="image" src="https://github.com/user-attachments/assets/21ea111c-80e3-463f-88ca-d68ca7905700">
+after CREATE INDEX idx_vehicletype_productid_size ON VehicleType(ProductID, Size);
+CREATE INDEX idx_vehicle_vin_vehicletypeid ON Vehicle(VIN, VehicleTypeID);
+CREATE INDEX idx_driver_vin_empid ON Driver(VIN, empID);
+CREATE INDEX idx_ride_empid_rating ON Ride(empID, Rating);
+<img width="1261" alt="image" src="https://github.com/user-attachments/assets/72f989df-aa38-4dca-9436-369784e90f38">
+The indexes did not impact the cost likely because the dataset is still relatively small, making sequential scans efficient enough for the joins and aggregations without needing additional indexing.
+
+
+
+This query lists the top drivers based on their average ratings and experience. It ensures that only drivers with a minimum level of experience are considered.
+
+<img width="375" alt="image" src="https://github.com/user-attachments/assets/a045aa12-b1a0-421b-92cd-b25310f72f6c">
+
+The origin performance analysis is 
+<img width="1098" alt="image" src="https://github.com/user-attachments/assets/08e9f2f2-e732-4d29-b54d-5a7a8c18df29">
+after CREATE INDEX idx_driver_experience ON Driver(Experience);
+CREATE INDEX idx_driver_empid ON Driver(empID);
+CREATE INDEX idx_ride_empid ON Ride(empID);
+CREATE INDEX idx_ride_orderid ON Ride(OrderID);
+<img width="1117" alt="image" src="https://github.com/user-attachments/assets/4193c13f-bbf0-4a04-a611-40bb4d4326ff">
+
+after CREATE INDEX idx_driver_empid_experience ON Driver(empID, Experience);
+CREATE INDEX idx_ride_empid_orderid_rating ON Ride(empID, OrderID, Rating);
+<img width="1088" alt="image" src="https://github.com/user-attachments/assets/f9f12a42-406c-47b7-b285-50a629cea43e">
+
+after CREATE INDEX idx_ride_empid_cover ON Ride(empID) INCLUDE (OrderID, Rating);
+<img width="1101" alt="image" src="https://github.com/user-attachments/assets/1f9bc8a4-b33b-4a94-9b0c-d2a169826d15">
+The fact that those three changes did not alter the query cost suggests that the database optimizer determined that sequential scans were more efficient given the current data volume. 
+
+This query identifies users who have registered in the system but have never booked a ride. This can be useful for targeted marketing or user engagement strategies.
+<img width="1405" alt="image" src="https://github.com/user-attachments/assets/e7b70e6f-1d0b-47ec-9dac-20e7e3dca492">
+The origin analysis is 
+<img width="965" alt="image" src="https://github.com/user-attachments/assets/b4dc169b-42a1-4440-a7f7-652a49380884">
+after CREATE INDEX idx_ride_uid ON Ride(UID);
+<img width="981" alt="image" src="https://github.com/user-attachments/assets/9a6c10eb-b2a5-4c24-a3a2-fdce9eb38437">
+after CREATE INDEX idx_ride_uid_orderid ON Ride(UID, OrderID);
+<img width="981" alt="image" src="https://github.com/user-attachments/assets/b67b3326-5fbb-41b1-9378-65052186325c">
+after CREATE INDEX idx_ride_uid_partial ON Ride(UID) WHERE UID IS NOT NULL;
+<img width="959" alt="image" src="https://github.com/user-attachments/assets/7870343e-7bbd-44a5-a3e4-0582cbb2c549">
+The fact that those three changes did not alter the query cost suggests that the database optimizer determined that sequential scans were more efficient given the current data volume. 
+
+
+
