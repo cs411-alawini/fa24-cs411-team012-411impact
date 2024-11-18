@@ -95,7 +95,7 @@ CREATE INDEX idx_vehicle_vin_vehicletypeid ON Vehicle(VIN, VehicleTypeID);
 CREATE INDEX idx_driver_vin_empid ON Driver(VIN, empID);
 CREATE INDEX idx_ride_empid_rating ON Ride(empID, Rating);
 <img width="1261" alt="image" src="https://github.com/user-attachments/assets/72f989df-aa38-4dca-9436-369784e90f38">
-The indexes did not impact the cost likely because the dataset is still relatively small, making sequential scans efficient enough for the joins and aggregations without needing additional indexing.
+The performance analysis shows that adding indexes slightly improved query execution time, but the impact was minimal because the dataset is small, and sequential scans are still efficient. Creating a basic index on VehicleType improved lookups slightly, while adding a covering index with ProductID helped more by avoiding extra table scans. Additional composite indexes improved join efficiency by reducing the cost of fetching related rows. However, sorting and nested loop joins remain the most time-consuming operations. As the dataset grows, the benefits of these indexes will become more noticeable. For now, the small dataset size limits the impact of these optimizations.
 
 
 
@@ -117,7 +117,7 @@ CREATE INDEX idx_ride_empid_orderid_rating ON Ride(empID, OrderID, Rating);
 
 after CREATE INDEX idx_ride_empid_cover ON Ride(empID) INCLUDE (OrderID, Rating);
 <img width="1101" alt="image" src="https://github.com/user-attachments/assets/1f9bc8a4-b33b-4a94-9b0c-d2a169826d15">
-The fact that those three changes did not alter the query cost suggests that the database optimizer determined that sequential scans were more efficient given the current data volume. 
+The performance analysis shows that adding indexes on Driver and Ride tables, including composite and covering indexes, did not significantly change query costs. While these indexes improve lookup and join efficiency by making data retrieval faster, the database optimizer still favored sequential scans because the dataset is relatively small. For now, the database doesn't see much benefit from the indexes since sequential scans are more efficient at this scale. However, as the dataset grows, the indexes will likely play a more important role in improving query performance.
 
 This query identifies users who have registered in the system but have never booked a ride. This can be useful for targeted marketing or user engagement strategies.
 <img width="1405" alt="image" src="https://github.com/user-attachments/assets/e7b70e6f-1d0b-47ec-9dac-20e7e3dca492">
@@ -129,7 +129,7 @@ after CREATE INDEX idx_ride_uid_orderid ON Ride(UID, OrderID);
 <img width="981" alt="image" src="https://github.com/user-attachments/assets/b67b3326-5fbb-41b1-9378-65052186325c">
 after CREATE INDEX idx_ride_uid_partial ON Ride(UID) WHERE UID IS NOT NULL;
 <img width="959" alt="image" src="https://github.com/user-attachments/assets/7870343e-7bbd-44a5-a3e4-0582cbb2c549">
-The fact that those three changes did not alter the query cost suggests that the database optimizer determined that sequential scans were more efficient given the current data volume. 
+The performance analysis shows that adding indexes on the Ride table, including a basic index on UID, a composite index on UID and OrderID, and a partial index on UID for non-null values, did not significantly impact query performance. This indicates that the database optimizer chose sequential scans as they are currently more efficient for the small dataset size. While the indexes provide potential benefits for larger datasets or more complex queries, their impact remains minimal at this scale. As the data grows, these indexes may become more valuable.
 
 
 
