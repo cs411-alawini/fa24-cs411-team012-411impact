@@ -45,6 +45,7 @@ In the future, we could:
 - **Driver State Management:** Implementing tables or fields to track driver availability, on-trip status, or break times would make the system more realistic and efficient.
 
 ## 10. Final Division of Labor and Teamwork Management
+In every phase of the project, we shared and distributed responsibilities among us. Each member was involved in different aspects of the work at one or another part of the process. For example, while one worked on database schema design, another implemented the backend logic, and the third handled the user interface. A bit later in the process, we readjusted roles: some members switched to testing and debugging, while others fine-tuned queries and performance optimization.
 
 ---
 
