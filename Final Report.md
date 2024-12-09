@@ -37,6 +37,8 @@ Jun: I noted that the database design did not initially consider tracking driver
 
 Nuoxing: One challenge I faced was data validation. Many of our API calls relied on the UID parameter for database queries. During the development phase, I initially overlooked implementing proper data validation, assuming it wouldn't be necessary early on. This oversight resulted in over an hour of debugging to identify why our backend API and SQL queries were failing. From this experience, I learned the importance of prioritizing robust data validation from the beginning to save time and prevent avoidable issues.
 
+Hewei: One of the major challenges we had to face was integrating the backend, frontend, and SQL database. Often, there were mismatches in data format because the backend fetched raw data directly from SQL, which needed restructuring for the frontend. It was a challenge to keep CRUD consistent in all layers, and this often resulted in incomplete updates or inconsistent states. To address these issues, we standardized data models, stored procedures in SQL for complex queries, and implemented middleware in the backend to format data forwarded to the frontend for reliable communication.
+
 ## 8. Other Changes Compared to the Original Proposal
 Most other changes were minor tweaks rather than major shifts from our original plan. The core tables and workflows remained consistent. The main difference was our inability to implement some of the advanced, dynamic features we initially planned.
 
