@@ -32,6 +32,7 @@ Our database allowed for reliable and efficient data storage and retrieval. Even
 
 ## 7. Technical Challenges by Each Team Member
 Bo: I think it difficult to determine which database columns should be indexed. While designing the database, it was unclear which fields would benefit most from indexing to improve query performance. It became apparent that careful thought about indexing should occur early in the design process, considering both the frequency and type of queries the application would run. 
+
 Jun: I noted that the database design did not initially consider tracking driver availability. Although adding an availability state could enhance the application’s logic—allowing for more sophisticated matching of drivers to orders—the absence of this feature did not critically harm the application’s core functionality. If future teams want to improve upon this, they might consider more robust state management. Instead of a simple “available/unavailable” flag, the system could track various states (e.g., “on duty,” “off duty,” “en route,” “awaiting next trip”) to provide richer, more flexible logic for driver and ride management.
 
 ## 8. Other Changes Compared to the Original Proposal
