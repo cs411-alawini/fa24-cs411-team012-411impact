@@ -47,9 +47,140 @@ In the future, we could:
 - **Driver State Management:** Implementing tables or fields to track driver availability, on-trip status, or break times would make the system more realistic and efficient.
 
 ## 10. Final Division of Labor and Teamwork Management
+For final Stage:
+
+Nuoxing: All the code of backend and front end for the final demo, including copies of the queries wrote for the transaction, stored procedure, trigger, and constraint.
+
+Bo, Jun, Hewei: queries wrote for the transaction, stored procedure, trigger, and constraint.
+
 In every phase of the project, we shared and distributed responsibilities among us. Each member was involved in different aspects of the work at one or another part of the process. For example, while one worked on database schema design, another implemented the backend logic, and the third handled the user interface. A bit later in the process, we readjusted roles: some members switched to testing and debugging, while others fine-tuned queries and performance optimization.
 
 ---
 
 **In Summary:**  
 We mostly followed our original direction but scaled back on dynamic and complex features. The application works as a basic ride request platform, storing user and order data reliably. Future improvements would focus on integrating real-time data sources, refining the pricing model, and enhancing the overall user experience.
+
+**Code of transaction, stored procedure, trigger, and constraint**
+```sql
+WITH FilteredDrivers AS (
+    SELECT 
+        dr.empID,
+        dr.VIN,
+        dr.Phone,
+        dr.Email,
+        TRIM(SUBSTRING_INDEX(SUBSTRING_INDEX(dr.Address, ',', 2), ',', -1)) AS City,
+        dr.Address,
+        dr.Pricing,
+        dr.Ratings
+    FROM 
+        Driver dr
+    WHERE 
+        (TRIM(SUBSTRING_INDEX(SUBSTRING_INDEX(dr.Address, ',', 2), ',', -1)) = ? 
+        OR TRIM(SUBSTRING_INDEX(SUBSTRING_INDEX(dr.Address, ',', 2), ',', -1)) = ?)
+        AND dr.Pricing <= ?
+),
+FilteredVehicles AS (
+    SELECT 
+        v.VIN,
+        vt.ProductID,
+        vt.Size,
+        vt.Type AS VehicleType,
+        vt.BrandName AS VehicleBrand
+    FROM 
+        Vehicle v
+    JOIN 
+        VehicleType vt ON v.VehicleTypeID = vt.ProductID
+    WHERE 
+        vt.Size = IF(? = '', vt.Size, ?)
+),
+DriverAggregations AS (
+    SELECT 
+        fd.City,
+        ROUND(AVG(fd.Ratings), 2) AS AvgRating,
+        COUNT(fd.empID) AS TotalDrivers
+    FROM 
+        FilteredDrivers fd
+    GROUP BY 
+        fd.City
+)
+SELECT 
+    fd.empID,
+    fd.Phone,
+    fd.Email,
+    fd.Address,
+    fd.Ratings,
+    fv.VehicleType AS VehicleName,
+    fv.VehicleBrand,
+    fv.Size AS VehicleSize,
+    da.AvgRating AS AverageCityRating,
+    da.TotalDrivers AS DriversInCity,
+    RANK() OVER (PARTITION BY fd.City ORDER BY fd.Ratings DESC) AS CityRatingRank
+FROM 
+    FilteredDrivers fd
+JOIN 
+    FilteredVehicles fv ON fd.VIN = fv.VIN
+JOIN 
+    DriverAggregations da ON fd.City = da.City
+ORDER BY 
+    fd.Ratings DESC;
+START TRANSACTION;
+SELECT 
+    d.VIN, 
+    d.Pricing, 
+    d.Phone, 
+    d.Email, 
+    d.Address, 
+    d.Experience,
+    AVG(r.Price) AS AvgPrice
+INTO 
+    @VIN, 
+    @Pricing, 
+    @Phone, 
+    @Email, 
+    @Address, 
+    @Experience,
+    @AvgPrice
+FROM 
+    Driver d
+LEFT JOIN
+    Ride r ON d.empID = r.empID
+WHERE 
+    d.empID = ?
+GROUP BY
+    d.VIN, d.Pricing, d.Phone, d.Email, d.Address, d.Experience
+FOR UPDATE;
+
+SET @Price = IFNULL(@AvgPrice, @Pricing);
+
+INSERT INTO Ride (UID, empID, Price, Date, PickupLocation, DropoffLocation, Rating)
+VALUES (
+    ?,                               
+    ?,                               
+    @Price,                           
+    NOW(),                            
+    @Address,                         
+    ?,  
+    NULL                              
+);
+
+INSERT INTO Travel_Movement (PickupLocation, DropoffLocation, Date, Time)
+VALUES (
+    @Address,                         
+    ?,   
+    NOW(),                            
+    NOW()                             
+);
+
+COMMIT;
+DELIMITER $$
+CREATE TRIGGER update_driver_rating
+AFTER UPDATE ON Ride
+FOR EACH ROW
+BEGIN
+    IF NEW.Rating IS NOT NULL AND (OLD.Rating IS NULL OR OLD.Rating != NEW.Rating) THEN
+        UPDATE Driver
+        SET Ratings = (Ratings + NEW.Rating) / 2
+        WHERE empID = NEW.empID;
+    END IF;
+END$$
+DELIMITER ;
