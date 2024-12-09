@@ -35,6 +35,8 @@ Bo: I think it difficult to determine which database columns should be indexed. 
 
 Jun: I noted that the database design did not initially consider tracking driver availability. Although adding an availability state could enhance the application’s logic—allowing for more sophisticated matching of drivers to orders—the absence of this feature did not critically harm the application’s core functionality. If future teams want to improve upon this, they might consider more robust state management. Instead of a simple “available/unavailable” flag, the system could track various states (e.g., “on duty,” “off duty,” “en route,” “awaiting next trip”) to provide richer, more flexible logic for driver and ride management.
 
+Nuoxing: One challenge I faced was data validation. Many of our API calls relied on the UID parameter for database queries. During the development phase, I initially overlooked implementing proper data validation, assuming it wouldn't be necessary early on. This oversight resulted in over an hour of debugging to identify why our backend API and SQL queries were failing. From this experience, I learned the importance of prioritizing robust data validation from the beginning to save time and prevent avoidable issues.
+
 ## 8. Other Changes Compared to the Original Proposal
 Most other changes were minor tweaks rather than major shifts from our original plan. The core tables and workflows remained consistent. The main difference was our inability to implement some of the advanced, dynamic features we initially planned.
 
